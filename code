@@ -1,19 +1,18 @@
-
+#include <Servo.h>
 #include <SPI.h>
 #include <MFRC522.h>
-const int SS_PIN = 10;
-const int RST_PIN = 9;
-MFRC522 mfrc522(SS_PIN, RST_PIN);
 #include <Wire.h>
-#include <Servo.h>
 #include <MaxMatrix.h>
 #include <avr/pgmspace.h>
-const int servo1 = A1;
-Servo servo1;
-int data = 8;
+const int SS_PIN = 10;
+const int RST_PIN = 9;
+const int servo = A1;
+int data = 8;        
 int load = 6;       
 int clock = 7;     
-int maxInUse = 4;    
+int maxInUse = 4; 
+Servo servo1;  
+MFRC522 mfrc522(SS_PIN, RST_PIN); 
 typedef const unsigned char prog_uchar;
 PROGMEM prog_uchar CH[] = {
 3, 8, B00000000, B00000000, B00000000, B00000000, B00000000, // space
@@ -112,41 +111,39 @@ PROGMEM prog_uchar CH[] = {
 3, 8, B01000001, B00110110, B00001000, B00000000, B00000000, // }
 4, 8, B00001000, B00000100, B00001000, B00000100, B00000000, // ~
 };
-
-
-MaxMatrix m(data, load, clock, maxInUse); 
+MaxMatrix m(data, load, clock, maxInUse); // define module
 byte buffer[10];
-char string1[] = " MAKERSPACE         "; 
-char string2[] = " USER 1 "; 
+char string1[] = " MAKERCPACE         "; //contents of first print
+char string2[] = " USER 1 "; //contents of second print
 char string3[] = " USER 2 ";
 char string4[] = " USER 3 ";
 char string5[] = " ADMIN ";
-char string6[] = " CARD NOT DEFINED ";
+char string6[] = " CARD NOT DEFINED        ";
 
 void setup() {
-  m.init(); 
-  m.setIntensity(0); 
-  servo1.attach(servo);
-  pinMode(pir, INPUT);
-  pinMode(led, OUTPUT);
+  
+  m.init(); // module initialize
+  m.setIntensity(0); // dot matix intensity 0-15
+  servo1.attach(A1);
+//  pinMode(pir, INPUT);
+//  pinMode(led, OUTPUT);
    //pinMode(servo, OUTPUT);
   Serial.begin(9600);
   SPI.begin();  
-  mfrc522.PCD_Init();   
-  Serial.println("reading card");
+  mfrc522.PCD_Init();   // Initiate MFRC522
+  Serial.println("reader is active");
   Serial.println();  
-  for(i=0; i<2;i++) {
+ /* for(i=0; i<2;i++) {
     digitalWrite(led, HIGH);
     delay(700);
     digitalWrite(led, LOW);
     delay(700);
   
   }
-  
+  */
 }
 void loop() {
   /*byte c;
-  
   while (Serial.available() > 0){
     byte c = Serial.read();
     Serial.println(c, DEC);
@@ -155,8 +152,12 @@ void loop() {
   delay(100);
   m.shiftLeft(false, true);
   */
-  PrintStringWithShift(string5);
- }
+  
+/* pirval = digitalRead(pir);
+ if(pirval == HIGH) {
+  Serial.println("1");
+  printStringWithShift(string1, 100);
+ }*/
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
@@ -203,7 +204,9 @@ void loop() {
     Serial.println();
 
   }
-  if (content.substring(1) == "BD 31 15 2B") {// ADMIN ID OF RFID CHIP
+  if (content.substring(1) == "E6 27 58 A5") {// ADMIN ID OF RFID CHIP
+    servo1.write(90);
+    delay(700);
     printStringWithShift(string5, 100);  
     Serial.println("Authorized access: ADMIN");
     Serial.println();
