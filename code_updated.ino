@@ -1,18 +1,10 @@
 
-      
-      
-      
-      
-      
-      
       ////////////////////////////////////////
      //                                    //
     //       MAKER SPACE SMART BOX        //
    //             BY: OMRI RAZ           //
   //                                    //
  ////////////////////////////////////////
-
-
 
 //================================//
 //   LIBRARIES AND HEADER FILES   //
@@ -54,8 +46,6 @@ char string5[] = "  ADMIN ";
 char string6[] = " CARD NOT DEFINED ";
 
 
-
-
 void setup() {
   pinMode(SW, INPUT);
   m.init();                 // Dot Matrix Module Initialize
@@ -71,8 +61,6 @@ void setup() {
   Serial.println("reader is active");
   Serial.println();  
 }
-
-
 
 void loop() {
   boxstatus = digitalRead(SW);
@@ -144,11 +132,7 @@ void loop() {
       
     }*/
   }  
-}
- 
-    
-   
-    
+}  
   
 //===========================================//
 //                FUNCTIONS                  //
